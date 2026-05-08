@@ -1,4 +1,4 @@
-package Biblioteca;
+
 
 public class LibroDigital extends Libro {
     private String formato; // PDF, EPUB, MOBI, etc.

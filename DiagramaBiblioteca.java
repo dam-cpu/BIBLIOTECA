@@ -2,9 +2,16 @@ import java.awt.*;
 import java.awt.geom.*;
 
 public class DiagramaBiblioteca extends Canvas {
+    
+    private int libroUbicacion = -1;
 
     public DiagramaBiblioteca() {
         
+    }
+    
+    public void setLibroUbicacion(int ubicacion) {
+        this.libroUbicacion = ubicacion;
+        repaint();
     }
     
     public void paint(Graphics g) {
@@ -131,5 +138,29 @@ public class DiagramaBiblioteca extends Canvas {
         g2d.setColor(Color.BLACK);
         g2d.drawString("Sillas", margen + 40, alto - margen + 85);
         
+        // Si hay ubicación definida, marcarla
+        if (libroUbicacion >= 0) {
+            marcarUbicacion(g2d, libroUbicacion);
+        }
+    }
+    
+    private void marcarUbicacion(Graphics2D g2d, int numLibrero) {
+        // Determinar en qué estantería se encuentra basado en el rango
+        int x = 0, y = 0;
+        if (numLibrero >= 100 && numLibrero <= 200) { x = 140; y = 130; }
+        else if (numLibrero >= 201 && numLibrero <= 300) { x = 140; y = 230; }
+        else if (numLibrero >= 301 && numLibrero <= 400) { x = 140; y = 330; }
+        else if (numLibrero >= 401 && numLibrero <= 500) { x = 140; y = 430; }
+        else if (numLibrero >= 501 && numLibrero <= 600) { x = 660; y = 130; }
+        else if (numLibrero >= 601 && numLibrero <= 700) { x = 660; y = 230; }
+        else if (numLibrero >= 701 && numLibrero <= 800) { x = 660; y = 330; }
+        else if (numLibrero >= 801 && numLibrero <= 900) { x = 660; y = 430; }
+        
+        // Dibujar X en rojo
+        g2d.setColor(Color.RED);
+        g2d.setStroke(new BasicStroke(3.0f));
+        int size = 20;
+        g2d.drawLine(x - size/2, y - size/2, x + size/2, y + size/2);
+        g2d.drawLine(x - size/2, y + size/2, x + size/2, y - size/2);
     }
 }

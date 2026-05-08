@@ -1,20 +1,24 @@
-package Biblioteca;
+
 
 import java.util.*;
 
 public class Usuario extends Persona{
     private List<Libro> librosPrestados;
     private Set<String> historialPrestamos;
+    private String tipo;
+
     public Usuario(String nombre, String id) {
         super(nombre, id);
         this.librosPrestados = new ArrayList<>();
         this.historialPrestamos = new HashSet<>();
+        this.tipo = "Usuario";
     }
 
     public Usuario(String id, String nombre, String tipo) {
         super(nombre, id);
         this.librosPrestados = new ArrayList<>();
         this.historialPrestamos = new HashSet<>();
+        this.tipo = tipo;
     }
     
     public Usuario(Usuario usuario) {
@@ -63,9 +67,17 @@ public class Usuario extends Persona{
         return new HashSet<>(historialPrestamos);
     }
 
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
     public String obtenerTipo() {
-		    return "Usuario";
-		}
+        return tipo;
+    }
 
     public String toString() {
         String cad = "ID: " + getId() + ", " + "Nombre: " + getNombre() + ". ";

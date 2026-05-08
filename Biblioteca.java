@@ -1,4 +1,4 @@
-package Biblioteca;
+
 
 import java.util.*;
 
@@ -163,6 +163,19 @@ public class Biblioteca {
     }
     return disponibles;
     }
+    
+    public List<Libro> getLibros() {
+        return libros;
+    }
+
+    public List<Usuario> getUsuarios() {
+        return new ArrayList<>(usuarios);
+    }
+
+    public List<Empleado> getEmpleados() {
+        return new ArrayList<>(empleados.values());
+    }
+
     public String toString() {
        String estado = "";
         estado += "Biblioteca: " + nombre + "\n";
