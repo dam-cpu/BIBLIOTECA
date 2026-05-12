@@ -1,6 +1,5 @@
-
-
 import java.util.*;
+import java.io.*;
 
 public class Biblioteca {
     private String nombre;
@@ -8,6 +7,7 @@ public class Biblioteca {
     private List<Libro> libros;
     private Set<Usuario> usuarios;
     private Map<String, Empleado> empleados;
+
     public Biblioteca(String nombre, String ubicacion) {
         this.nombre = nombre;
         this.ubicacion = ubicacion;
@@ -24,21 +24,216 @@ public class Biblioteca {
         return ubicacion;
     }
 
+    // -------------------------------------------------------
+    // Sección 4.1 - Método buscarLibro()
+    // -------------------------------------------------------
+
+    public List<Libro> buscarLibrosPorTitulo(String titulo) {
+        try {
+            if (titulo == null) {
+                throw new NullPointerException("El título de búsqueda no puede ser null");
+            }
+            List<Libro> resultados = new ArrayList<>();
+            for (Libro libro : libros) {
+                if (libro.getTitulo().toLowerCase().contains(titulo.toLowerCase())) {
+                    resultados.add(libro);
+                }
+            }
+            if (resultados.isEmpty()) {
+                throw new LibroNoDisponibleException("No se encontró ningún libro con el título: " + titulo);
+            }
+            return resultados;
+        } catch (NullPointerException e) {
+            BibliotecaLogger.logError("Error al acceder al catálogo", e);
+            return new ArrayList<>();
+        } catch (LibroNoDisponibleException e) {
+            BibliotecaLogger.logWarning(e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    // -------------------------------------------------------
+    // Sección 4.2 - Método prestarLibro()
+    // -------------------------------------------------------
+
+    public boolean prestarLibro(String isbn, String idUsuario, String idEmpleado) {
+        try {
+            if (isbn == null || idUsuario == null || idEmpleado == null) {
+                throw new IllegalArgumentException("Los parámetros no pueden ser nulos");
+            }
+
+            Libro libro = null;
+            for (Libro l : libros) {
+                if (l.getIsbn().equals(isbn)) {
+                    libro = l;
+                    break;
+                }
+            }
+            if (libro == null) {
+                throw new LibroNoDisponibleException("El libro con ISBN " + isbn + " no existe en la biblioteca");
+            }
+            if (libro.isPrestado()) {
+                throw new LibroNoDisponibleException("El libro con ISBN " + isbn + " ya está prestado");
+            }
+
+            Usuario usuario = buscarUsuarioPorId(idUsuario);
+            if (usuario == null) {
+                throw new UsuarioNoEncontradoException("Usuario con ID " + idUsuario + " no encontrado");
+            }
+            if (usuario.estaSuspendido()) {
+                throw new UsuarioSuspendidoException("El usuario " + idUsuario + " está suspendido");
+            }
+            if (usuario.getPrestamosActuales() >= usuario.getLimitePrestamos()) {
+                throw new LimitePrestamosException("El usuario ha excedido su límite de préstamos");
+            }
+
+            Empleado empleado = empleados.get(idEmpleado);
+            if (empleado == null) {
+                throw new EmpleadoNoEncontradoException("Empleado con ID " + idEmpleado + " no encontrado");
+            }
+
+            boolean resultado = empleado.procesarPrestamo(libro, usuario);
+            if (resultado) {
+                BibliotecaLogger.logInfo("Préstamo exitoso: Libro " + isbn + " al usuario " + idUsuario);
+                // Registrar la transacción en archivo
+                registrarOperacion("PRESTAMO: ISBN=" + isbn + " Usuario=" + idUsuario);
+            }
+            return resultado;
+
+        } catch (IllegalArgumentException e) {
+            BibliotecaLogger.logError("Error de validación en préstamo", e);
+            return false;
+        } catch (LibroNoDisponibleException | UsuarioSuspendidoException |
+                 LimitePrestamosException | UsuarioNoEncontradoException |
+                 EmpleadoNoEncontradoException e) {
+            BibliotecaLogger.logWarning("Error en el préstamo: " + e.getMessage());
+            return false;
+        } catch (Exception e) {
+            BibliotecaLogger.logError("Error inesperado en préstamo", e);
+            return false;
+        }
+    }
+
+    public boolean devolverLibro(String idLibro, String idEmpleado) {
+        Libro libro = null;
+        for (Libro l : libros) {
+            if (l.getIsbn().equals(idLibro)) {
+                libro = l;
+                break;
+            }
+        }
+
+        Empleado empleado = empleados.get(idEmpleado);
+
+        if (libro != null && empleado != null && libro.isPrestado()) {
+            libro.devolverLibro();
+            empleado.devolverPrestamo();
+            BibliotecaLogger.logInfo("Devolución exitosa: Libro " + idLibro);
+            registrarOperacion("DEVOLUCION: ISBN=" + idLibro);
+            return true;
+        }
+        return false;
+    }
+
+    // -------------------------------------------------------
+    // Sección 4.3 - Operaciones de archivo con try-with-resources
+    // -------------------------------------------------------
+
+    private void registrarOperacion(String operacion) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("operaciones.log", true))) {
+            writer.write(new java.util.Date() + " - " + operacion);
+            writer.newLine();
+        } catch (FileNotFoundException e) {
+            BibliotecaLogger.logError("No se encontró el archivo de operaciones", e);
+        } catch (IOException e) {
+            BibliotecaLogger.logError("Error al escribir en el archivo de operaciones", e);
+        }
+    }
+
+    public void cargarConfiguracion(String rutaArchivo) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(rutaArchivo))) {
+            String linea;
+            while ((linea = reader.readLine()) != null) {
+                BibliotecaLogger.logInfo("Configuración cargada: " + linea);
+            }
+        } catch (FileNotFoundException e) {
+            BibliotecaLogger.logError("Archivo de configuración no encontrado: " + rutaArchivo, e);
+        } catch (IOException e) {
+            BibliotecaLogger.logError("Error al leer el archivo de configuración", e);
+        }
+    }
+
+    // -------------------------------------------------------
+    // Sección 4.4 - Validaciones de usuario
+    // -------------------------------------------------------
+
+    public void agregarUsuario(Usuario usuario) {
+        try {
+            if (usuario == null) {
+                throw new IllegalArgumentException("El usuario no puede ser null");
+            }
+            // Verificar autenticación: el usuario debe tener id y nombre válidos
+            if (usuario.getId() == null || usuario.getId().trim().isEmpty()) {
+                throw new IllegalArgumentException("El usuario debe tener un ID válido");
+            }
+            // Verificar si ya existe
+            for (Usuario u : usuarios) {
+                if (u.getId().equals(usuario.getId())) {
+                    throw new IllegalArgumentException("Ya existe un usuario con el ID: " + usuario.getId());
+                }
+            }
+            usuarios.add(usuario);
+            BibliotecaLogger.logInfo("Usuario agregado: " + usuario.getId());
+        } catch (IllegalArgumentException e) {
+            BibliotecaLogger.logError("Error al agregar usuario", e);
+            // Rollback: no se realiza ninguna operación si hay error
+        }
+    }
+
+    public void eliminarUsuario(Usuario usuario) {
+        try {
+            if (usuario == null) {
+                throw new IllegalArgumentException("El usuario no puede ser null");
+            }
+            // Verificar dependencias activas: no se puede eliminar si tiene préstamos
+            if (usuario.getPrestamosActuales() > 0) {
+                throw new IllegalArgumentException("No se puede eliminar un usuario con préstamos activos");
+            }
+            usuarios.remove(usuario);
+            BibliotecaLogger.logInfo("Usuario eliminado: " + usuario.getId());
+        } catch (IllegalArgumentException e) {
+            BibliotecaLogger.logError("Error al eliminar usuario", e);
+            // Rollback: el usuario no se elimina si hay error
+        }
+    }
+
+    public Usuario buscarUsuarioPorId(String id) {
+        if (id == null || id.trim().isEmpty()) {
+            throw new IllegalArgumentException("El ID de usuario no puede ser null o vacío");
+        }
+        for (Usuario usuario : usuarios) {
+            if (usuario.getId().equals(id)) {
+                return usuario;
+            }
+        }
+        return null;
+    }
+
+    // -------------------------------------------------------
+    // Resto de métodos
+    // -------------------------------------------------------
+
     public void agregarLibro(Libro libro) {
+        if (libro == null) {
+            throw new NullPointerException("El libro no puede ser null");
+        }
         libros.add(libro);
     }
 
-    public List<Libro> buscarLibrosPorTitulo(String titulo) {
-        List<Libro> resultados = new ArrayList<>();
-        for (Libro libro : libros) {
-            if (libro.getTitulo().toLowerCase().contains(titulo.toLowerCase())) {
-                resultados.add(libro);
-            }
-        }
-        return resultados;
-    }
-
     public void eliminarLibro(Libro libro) {
+        if (libro == null) {
+            throw new NullPointerException("El libro no puede ser null");
+        }
         libros.remove(libro);
     }
 
@@ -72,60 +267,6 @@ public class Biblioteca {
         return prestados;
     }
 
-    public boolean prestarLibro(String isbn, String idUsuario, String idEmpleado) {
-		    Libro libro = null;
-		    for (Libro l : libros) {
-		        if (l.getIsbn().equals(isbn)) {
-		            libro = l;
-		            break;
-		        }
-		    }
-		    
-		    Usuario usuario = buscarUsuarioPorId(idUsuario);
-		    Empleado empleado = empleados.get(idEmpleado);
-		
-		    if (libro != null && usuario != null && empleado != null && !libro.isPrestado()) {
-		        return empleado.procesarPrestamo(libro, usuario);
-		    }
-		    return false;
-		}
-
-    public boolean devolverLibro(String idLibro, String idEmpleado) {
-		    Libro libro = null;
-		    for (Libro l : libros) {
-		        if (l.getIsbn().equals(idLibro)) {
-		            libro = l;
-		            break;
-		        }
-		    }
-		    
-		    Empleado empleado = empleados.get(idEmpleado);
-		
-		    if (libro != null && empleado != null && libro.isPrestado()) {
-		        libro.devolverLibro();
-		        empleado.devolverPrestamo();
-		        return true;
-		    }
-		    return false;
-		}
-
-    public void agregarUsuario(Usuario usuario) {
-        usuarios.add(usuario);
-    }
-
-    public void eliminarUsuario(Usuario usuario) {
-        usuarios.remove(usuario);
-    }
-
-    public Usuario buscarUsuarioPorId(String id) {
-        for (Usuario usuario : usuarios) {
-            if (usuario.getId().equals(id)) {
-                return usuario;
-            }
-        }
-        return null;
-    }
-
     public void agregarEmpleado(Empleado empleado) {
         empleados.put(empleado.getId(), empleado);
     }
@@ -144,6 +285,7 @@ public class Biblioteca {
         }
         return false;
     }
+
     public boolean devolverLibro(Libro libro, Usuario usuario, Empleado empleado) {
         if (libro != null && usuario != null && empleado != null && libro.isPrestado()) {
             if (usuario.devolverLibro(libro)) {
@@ -155,15 +297,15 @@ public class Biblioteca {
     }
 
     public List<Libro> getLibrosDisponibles() {
-    List<Libro> disponibles = new ArrayList<>();
-    for (Libro libro : libros) {
-        if (!libro.isPrestado()) {
-            disponibles.add(libro);
+        List<Libro> disponibles = new ArrayList<>();
+        for (Libro libro : libros) {
+            if (!libro.isPrestado()) {
+                disponibles.add(libro);
+            }
         }
+        return disponibles;
     }
-    return disponibles;
-    }
-    
+
     public List<Libro> getLibros() {
         return libros;
     }
@@ -177,7 +319,7 @@ public class Biblioteca {
     }
 
     public String toString() {
-       String estado = "";
+        String estado = "";
         estado += "Biblioteca: " + nombre + "\n";
         estado += "Ubicación: " + ubicacion + "\n";
         estado += "Total de libros: " + libros.size() + "\n";
@@ -185,14 +327,12 @@ public class Biblioteca {
         estado += "Libros prestados: " + getLibrosPrestados().size() + "\n";
         estado += "Total de usuarios registrados: " + usuarios.size() + "\n";
         estado += "Total de empleados: " + empleados.size() + "\n";
-        
-        // Información detallada de libros prestados
+
         estado += "\nLibros actualmente prestados:\n";
         for (Libro libro : getLibrosPrestados()) {
             estado += "- " + libro.getTitulo() + "\n";
         }
-        
+
         return estado;
     }
-
 }

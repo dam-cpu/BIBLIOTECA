@@ -1,8 +1,6 @@
-
-
 import java.util.*;
 
-public class Usuario extends Persona{
+public class Usuario extends Persona {
     private List<Libro> librosPrestados;
     private Set<String> historialPrestamos;
     private String tipo;
@@ -20,7 +18,7 @@ public class Usuario extends Persona{
         this.historialPrestamos = new HashSet<>();
         this.tipo = tipo;
     }
-    
+
     public Usuario(Usuario usuario) {
         super(usuario.getNombre(), usuario.getId());
         this.librosPrestados = usuario.getLibrosPrestados();
@@ -28,7 +26,10 @@ public class Usuario extends Persona{
     }
 
     public boolean solicitarPrestamo(Libro libro) {
-        if (libro != null && !libro.isPrestado() && libro.prestarLibro()) {
+        if (libro == null) {
+            throw new IllegalArgumentException("Libro no puede ser null");
+        }
+        if (!libro.isPrestado() && libro.prestarLibro()) {
             librosPrestados.add(libro);
             historialPrestamos.add(libro.getIsbn());
             return true;
@@ -37,6 +38,9 @@ public class Usuario extends Persona{
     }
 
     public boolean devolverLibro(Libro libro) {
+        if (libro == null) {
+            throw new IllegalArgumentException("Libro no puede ser null");
+        }
         if (librosPrestados.contains(libro)) {
             libro.devolverLibro();
             librosPrestados.remove(libro);
@@ -53,10 +57,20 @@ public class Usuario extends Persona{
      */
     @Deprecated
     public Libro getLibroPrestado() {
-        if (!librosPrestados.isEmpty()) {
+        try {
+            if (librosPrestados == null) {
+                throw new IllegalStateException("La lista de libros prestados no está inicializada");
+            }
+            if (librosPrestados.isEmpty()) {
+                return null;
+            }
+            if (librosPrestados.get(0) == null) {
+                throw new IllegalStateException("El libro en la posición 0 es null");
+            }
             return new Libro(librosPrestados.get(0));
+        } catch (IndexOutOfBoundsException e) {
+            throw new IllegalStateException("Error al acceder a la lista de libros prestados", e);
         }
-        return null;
     }
 
     public List<Libro> getLibrosPrestados() {
@@ -87,5 +101,4 @@ public class Usuario extends Persona{
             cad += "No tiene en préstamo un libro.";
         return cad;
     }
-    
 }

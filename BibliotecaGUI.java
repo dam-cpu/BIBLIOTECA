@@ -247,9 +247,10 @@ public class BibliotecaGUI extends JFrame {
         // Actualizar tabla con los libros iniciales
         actualizarTablaLibros(biblioteca.getLibros());
     }
-    
+
     private void actualizarEstado(String mensaje) {
         lblEstado.setText(" " + mensaje);
+        BibliotecaLogger.logInfo(mensaje);
     }
     
     private void actualizarTablaLibros(List<Libro> libros) {
@@ -436,8 +437,20 @@ public class BibliotecaGUI extends JFrame {
             eliminarLibro();
         }
     }
-    
+
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new BibliotecaGUI());
+        SwingUtilities.invokeLater(() -> {
+            BibliotecaGUI gui = new BibliotecaGUI();
+            // Inicializar el logger al inicio de la aplicación
+            try {
+                BibliotecaLogger.inicializar();
+                BibliotecaLogger.logInfo("Sistema de Biblioteca iniciado correctamente");
+            
+            } catch (Exception e) {
+                System.err.println("Error al inicializar el sistema: " + e.getMessage());
+                BibliotecaLogger.logError(e.getMessage(), e);
+                System.exit(1);
+            }
+        });
     }
 }
