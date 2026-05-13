@@ -1,52 +1,62 @@
-# Laboratorio 08 - Implementación de Gráficos Básico
+# Laboratorio 11 - Implementación de Excepciones
 
-Este proyecto implementa un sistema completo de gráficos básicos en Java utilizando Java 2D API, siguiendo exactamente las especificaciones del laboratorio oficial.
+Este proyecto implementa un sistema robusto de manejo de excepciones para el sistema de biblioteca, incluyendo un logger de eventos, excepciones personalizadas y validaciones en las clases del modelo y la lógica de negocio.
 
 ## Clases Implementadas
 
-### Gráficos Básicos
-- **TestGraficos.java**: Ventana principal para probar gráficos de estadísticas
-- **GraficoEstadisticas.java**: Componente Canvas que dibuja gráficos de barras para estadísticas de préstamos
-- **TestDiagramaBiblioteca.java**: Ventana para probar el diagrama de biblioteca
-- **DiagramaBiblioteca.java**: Componente Canvas que dibuja un diagrama esquemático de una biblioteca
+### Logger
+- **BibliotecaLogger.java**: Sistema de registro de eventos usando `java.util.logging`. Escribe en `biblioteca.log` y provee métodos estáticos para registrar errores, advertencias e información.
 
-### Mejoras Propuestas
-- **IGrafico.java**: Interfaz común para todos los tipos de gráficos
-- **GraficoBase.java**: Clase abstracta con funcionalidad compartida
-- **GraficoLineal.java**: Implementación de gráficos de líneas con tendencias
-- **GraficoPastel.java**: Implementación de gráficos circulares (pastel)
-- **TestMejorasGraficos.java**: Ventana para probar las nuevas implementaciones
+### Excepciones Personalizadas
+- **LibroNoDisponibleException.java**: Lanzada cuando un libro no existe o ya está prestado
+- **UsuarioSuspendidoException.java**: Lanzada cuando se intenta operar con un usuario suspendido
+- **LimitePrestamosException.java**: Lanzada cuando el usuario excede su límite de préstamos
+- **UsuarioNoEncontradoException.java**: Lanzada cuando no se encuentra un usuario por ID
+- **EmpleadoNoEncontradoException.java**: Lanzada cuando no se encuentra un empleado por ID
+- **PrestamoInvalidoException.java**: Lanzada cuando los datos de un préstamo son inválidos
+- **LibroNoRegistradoException.java**: Lanzada cuando el ISBN no existe en el sistema
+- **EstadoInvalidoException.java**: Lanzada cuando un libro no está en el estado esperado
+- **DuplicadoException.java**: Lanzada al intentar agregar un libro con ISBN ya existente
+- **OperacionDenegadaException.java**: Lanzada cuando no se tienen permisos para una operación
+- **ValidacionDatosException.java**: Lanzada cuando los datos de un usuario son inválidos
+- **UsuarioExistenteException.java**: Lanzada al intentar registrar un usuario duplicado
+- **DependenciasActivasException.java**: Lanzada al intentar eliminar un usuario con préstamos activos
 
-### Utilidades
-- **MainGraficos.java**: Programa principal que lanza todas las ventanas de prueba
+### Clases del Modelo Modificadas
+- **Persona.java**: Validaciones en constructor (`nombre` e `id` no nulos), `setEmail()` con regex y `setTelefono()` con validación de 10 dígitos
+- **Usuario.java**: Validaciones en `solicitarPrestamo()` y `devolverLibro()`, atributos `suspendido` y `limitePrestamos` con sus getters y setters
+- **Empleado.java**: Validaciones en `setSalario()` (no negativo), `setPuesto()` (no vacío) y `setTurno()` (solo MATUTINO, VESPERTINO o MIXTO)
 
-## Características Implementadas
+### Sistema de Logger
+- Escritura en archivo `biblioteca.log` con modo append
+- Formato legible con `SimpleFormatter`
+- Tres niveles de log: `logInfo()`, `logWarning()`, `logError()`
+- Inicialización con manejo de `IOException`
+- Registro automático de todos los eventos de la interfaz
 
-### GraficoEstadisticas
-- Gráfico de barras verticales
-- Escalado automático basado en valores máximos
-- Etiquetas de meses en el eje X
-- Valores numéricos encima de cada barra
-- Ejes X e Y con etiquetas
-- Título del gráfico
+### Excepciones Personalizadas
+- 13 clases de excepción personalizadas que extienden `Exception`
+- Cada una recibe un mensaje descriptivo en el constructor
+- Organizadas por área: catálogo, usuarios, empleados y operaciones
 
-### DiagramaBiblioteca
-- Paredes exteriores de la biblioteca
-- 4 estanterías verticales
-- 2 cubículos de empleados
-- 6 mesas de estudio
-- Sillas alrededor de las mesas
-- Puerta y ventana
-- Etiquetas identificativas
-- Leyenda con colores
+### Validaciones en el Modelo
+- Constructor de `Persona` valida nombre e ID no nulos ni vacíos
+- `setEmail()` valida formato con regex `^[A-Za-z0-9+_.-]+@(.+)$`
+- `setTelefono()` valida exactamente 10 dígitos
+- `setSalario()` rechaza valores negativos
+- `setTurno()` solo acepta las constantes `MATUTINO`, `VESPERTINO` o `MIXTO`
 
-### Mejoras Implementadas
-- Interfaz común IGrafico para estandarización
-- Arquitectura extensible con GraficoBase
-- Gráfico lineal con puntos de datos
-- Gráfico circular (pastel) con porcentajes
-- Sistema de colores configurable
-- Títulos personalizables
+### Puntos de Implementación Try-Catch
+- `prestarLibro()`: valida libro, usuario, suspensión, límite de préstamos y empleado
+- `devolverLibro()`: valida ISBN registrado y estado del libro
+- `buscarUsuarioPorId()`: valida ID no nulo y existencia del usuario
+- `agregarLibro()` / `eliminarLibro()`: valida nulos, duplicados y permisos
+- `agregarUsuario()` / `eliminarUsuario()`: valida datos, duplicados y dependencias activas
+
+### Operaciones de Archivo
+- `registrarOperacion()` usa try-with-resources con `BufferedWriter` para escribir en `operaciones.log`
+- `cargarConfiguracion()` usa try-with-resources con `BufferedReader` para leer archivos de configuración
+- Manejo de `FileNotFoundException` e `IOException` con log de errores
 
 ## Cómo Ejecutar
 
@@ -57,32 +67,17 @@ javac *.java
 
 2. Ejecutar el programa principal:
 ```bash
-java MainGraficos
+java BibliotecaGUI
 ```
 
-Esto abrirá 3 ventanas:
-- Gráfico de Estadísticas (barras)
-- Diagrama de Biblioteca
-- Mejoras de Gráficos (líneas y pastel)
+Esto abrirá la ventana principal del sistema de biblioteca. Al iniciar se crearán automáticamente los archivos de log:
+- `biblioteca.log`: registro de eventos del sistema
+- `operaciones.log`: registro de préstamos y devoluciones
 
 ## Tecnologías Utilizadas
 
-- **Java AWT**: Para componentes de ventana y manejo de eventos
-- **Java 2D API**: Para gráficos avanzados con antialiasing
-- **Graphics2D**: Para dibujado de formas geométricas
-- **RenderingHints**: Para suavizado de bordes
-- **BasicStroke**: Para configuración de líneas
-- **Shape classes**: Rectangle2D, Arc2D para formas complejas
-
-## Arquitectura
-
-El proyecto sigue una arquitectura de componentes Canvas que extienden la clase base y sobrescriben el método paint() para dibujar gráficos personalizados. Las mejoras incluyen una interfaz común y herencia para facilitar la extensión futura.
-
-## Próximas Mejoras Sugeridas
-
-- Gráfico de dispersión (GraficoDispersion)
-- Gráfico radar (GraficoRadar)
-- Interactividad con mouse
-- Animaciones
-- Exportación a imágenes
-- Configuración desde archivos
+- **java.util.logging**: Para el sistema de registro de eventos (Logger, FileHandler, SimpleFormatter)
+- **java.io**: Para operaciones de archivo con BufferedWriter, BufferedReader y FileWriter
+- **Try-with-resources**: Para manejo automático del cierre de recursos de archivo
+- **Excepciones checked**: Todas las excepciones personalizadas extienden `Exception`
+- **IllegalArgumentException / NullPointerException**: Para validaciones de parámetros de entrada

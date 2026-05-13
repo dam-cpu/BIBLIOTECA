@@ -4,12 +4,16 @@ public class Usuario extends Persona {
     private List<Libro> librosPrestados;
     private Set<String> historialPrestamos;
     private String tipo;
+    private boolean suspendido;
+    private int limitePrestamos;
 
     public Usuario(String nombre, String id) {
         super(nombre, id);
         this.librosPrestados = new ArrayList<>();
         this.historialPrestamos = new HashSet<>();
         this.tipo = "Usuario";
+        this.suspendido = false;
+        this.limitePrestamos = 3;
     }
 
     public Usuario(String id, String nombre, String tipo) {
@@ -17,12 +21,16 @@ public class Usuario extends Persona {
         this.librosPrestados = new ArrayList<>();
         this.historialPrestamos = new HashSet<>();
         this.tipo = tipo;
+        this.suspendido = false;
+        this.limitePrestamos = 3;
     }
 
     public Usuario(Usuario usuario) {
         super(usuario.getNombre(), usuario.getId());
         this.librosPrestados = usuario.getLibrosPrestados();
         this.historialPrestamos = usuario.getHistorialPrestamos();
+        this.suspendido = usuario.estaSuspendido();
+        this.limitePrestamos = usuario.getLimitePrestamos();
     }
 
     public boolean solicitarPrestamo(Libro libro) {
@@ -79,6 +87,29 @@ public class Usuario extends Persona {
 
     public Set<String> getHistorialPrestamos() {
         return new HashSet<>(historialPrestamos);
+    }
+
+    public boolean estaSuspendido() {
+        return suspendido;
+    }
+
+    public void setSuspendido(boolean suspendido) {
+        this.suspendido = suspendido;
+    }
+
+    public int getLimitePrestamos() {
+        return limitePrestamos;
+    }
+
+    public void setLimitePrestamos(int limitePrestamos) {
+        if (limitePrestamos < 0) {
+            throw new IllegalArgumentException("El límite de préstamos no puede ser negativo");
+        }
+        this.limitePrestamos = limitePrestamos;
+    }
+
+    public int getPrestamosActuales() {
+        return librosPrestados.size();
     }
 
     public String getTipo() {
