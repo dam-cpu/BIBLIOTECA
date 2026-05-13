@@ -31,23 +31,19 @@ public class DialogoEditarLibro extends JDialog {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         
-        // Crear campos de texto y cargar datos existentes
         txtISBN = new JTextField(libroOriginal.getIsbn(), 20);
-        txtISBN.setEditable(false); // ISBN no se puede modificar
+        txtISBN.setEditable(false);
         txtTitulo = new JTextField(libroOriginal.getTitulo(), 20);
         txtAutor = new JTextField(libroOriginal.getAutor(), 20);
         txtEditorial = new JTextField(20);
         
-        // Crear spinner de páginas
         spnPaginas = new JSpinner(new SpinnerNumberModel(libroOriginal.getNumPaginas(), 1, 9999, 1));
         
-        // Agregar componentes con sus etiquetas
         agregarComponente("Título:", txtTitulo, gbc, 0);
         agregarComponente("Autor:", txtAutor, gbc, 1);
         agregarComponente("ISBN:", txtISBN, gbc, 2);
         agregarComponente("Páginas:", spnPaginas, gbc, 3);
         
-        // Panel de botones
         pnlBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         btnGuardar = new JButton("Guardar");
         btnCancelar = new JButton("Cancelar");
@@ -58,7 +54,6 @@ public class DialogoEditarLibro extends JDialog {
         pnlBotones.add(btnGuardar);
         pnlBotones.add(btnCancelar);
         
-        // Agregar panel de botones al diálogo
         gbc.gridx = 0;
         gbc.gridy = 4;
         gbc.gridwidth = 2;
@@ -67,14 +62,12 @@ public class DialogoEditarLibro extends JDialog {
     }
     
     private void agregarComponente(String etiqueta, JComponent componente, GridBagConstraints gbc, int y) {
-        // Etiqueta
         gbc.gridx = 0;
         gbc.gridy = y;
         gbc.gridwidth = 1;
         gbc.anchor = GridBagConstraints.EAST;
         add(new JLabel(etiqueta), gbc);
         
-        // Componente
         gbc.gridx = 1;
         gbc.anchor = GridBagConstraints.WEST;
         add(componente, gbc);
@@ -98,7 +91,6 @@ public class DialogoEditarLibro extends JDialog {
         return libroEditado;
     }
     
-    // Clase interna para el botón Guardar
     private class BotonGuardar implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -106,7 +98,6 @@ public class DialogoEditarLibro extends JDialog {
         }
     }
     
-    // Clase interna para el botón Cancelar
     private class BotonCancelar implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {

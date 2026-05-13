@@ -11,26 +11,21 @@ public class DialogoUbicacion extends JDialog {
         super(parent, "Ubicación del Libro", true);
         this.libro = libro;
         
-        // Configuración básica del diálogo
         setSize(800, 700);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout());
         
-        // Crear y agregar el diagrama
         diagrama = new DiagramaBiblioteca();
         add(diagrama, BorderLayout.CENTER);
         
-        // Extraer últimos 3 dígitos del ISBN
         String isbn = libro.getIsbn();
         String ubicacion = isbn.substring(Math.max(0, isbn.length() - 3));
         int numLibrero = Integer.parseInt(ubicacion);
         diagrama.setLibroUbicacion(numLibrero);
         
-        // Panel de información
         JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
         
-        // Etiquetas de información
         JLabel titleLabel = new JLabel("Título: " + libro.getTitulo());
         JLabel isbnLabel = new JLabel("ISBN: " + libro.getIsbn());
         JLabel ubicacionLabel = new JLabel("Número de Librero: " + numLibrero);
@@ -42,7 +37,6 @@ public class DialogoUbicacion extends JDialog {
         infoPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         add(infoPanel, BorderLayout.NORTH);
         
-        // Botón de cerrar
         JButton closeButton = new JButton("Cerrar");
         closeButton.addActionListener(new CierraDialogo());
         

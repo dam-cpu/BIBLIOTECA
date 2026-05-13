@@ -57,12 +57,6 @@ public class Usuario extends Persona {
         return false;
     }
 
-    /**
-     * @deprecated Use getLibrosPrestados() que retorna List<Libro>.
-     * Obtiene una copia del primer libro prestado actualmente.
-     *
-     * @return Una copia del primer libro prestado o null si no hay préstamos activos
-     */
     @Deprecated
     public Libro getLibroPrestado() {
         try {

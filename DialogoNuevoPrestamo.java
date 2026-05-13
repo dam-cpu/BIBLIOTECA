@@ -2,9 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-/**
- * Diálogo para registrar un nuevo préstamo de libro
- */
 public class DialogoNuevoPrestamo extends JDialog {
     private JComboBox<String> cbxLibros;
     private JComboBox<String> cbxUsuarios;
@@ -33,7 +30,6 @@ public class DialogoNuevoPrestamo extends JDialog {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 1.0;
 
-        // Seleccionar libro
         gbc.gridx = 0;
         gbc.gridy = 0;
         add(new JLabel("Libro:"), gbc);
@@ -47,7 +43,6 @@ public class DialogoNuevoPrestamo extends JDialog {
         cbxLibros = new JComboBox<>(librosArray);
         add(cbxLibros, gbc);
 
-        // Seleccionar usuario
         gbc.gridx = 0;
         gbc.gridy = 1;
         add(new JLabel("Usuario:"), gbc);
@@ -63,7 +58,6 @@ public class DialogoNuevoPrestamo extends JDialog {
         cbxUsuarios = new JComboBox<>(usuariosArray);
         add(cbxUsuarios, gbc);
 
-        // Seleccionar empleado
         gbc.gridx = 0;
         gbc.gridy = 2;
         add(new JLabel("Empleado:"), gbc);
@@ -79,7 +73,6 @@ public class DialogoNuevoPrestamo extends JDialog {
         cbxEmpleados = new JComboBox<>(empleadosArray);
         add(cbxEmpleados, gbc);
 
-        // Panel de botones
         JPanel pnlBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton btnGuardar = new JButton("Guardar");
         JButton btnCancelar = new JButton("Cancelar");
@@ -117,22 +110,18 @@ public class DialogoNuevoPrestamo extends JDialog {
         }
 
         try {
-            // Extraer ISBN del item seleccionado
             String libroSeleccionado = (String) cbxLibros.getSelectedItem();
             libroISBN = libroSeleccionado.substring(libroSeleccionado.lastIndexOf("(") + 1,
                     libroSeleccionado.lastIndexOf(")"));
 
-            // Extraer ID del usuario
             String usuarioSeleccionado = (String) cbxUsuarios.getSelectedItem();
             usuarioID = usuarioSeleccionado.substring(usuarioSeleccionado.lastIndexOf("(") + 1,
                     usuarioSeleccionado.lastIndexOf(")"));
 
-            // Extraer ID del empleado
             String empleadoSeleccionado = (String) cbxEmpleados.getSelectedItem();
             empleadoID = empleadoSeleccionado.substring(empleadoSeleccionado.lastIndexOf("(") + 1,
                     empleadoSeleccionado.lastIndexOf(")"));
 
-            // Realizar préstamo
             if (biblioteca.prestarLibro(libroISBN, usuarioID, empleadoID)) {
                 guardadoExitoso = true;
                 JOptionPane.showMessageDialog(this,

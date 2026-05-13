@@ -13,18 +13,15 @@ public class GraficoLineal extends GraficoBase {
         int width = g2d.getClipBounds().width;
         int height = g2d.getClipBounds().height;
         
-        // Dibujar título
         g2d.setColor(Color.BLACK);
         g2d.setFont(new Font("Arial", Font.BOLD, 16));
         g2d.drawString(titulo, 50, 30);
         
-        // Encontrar máximo para escalar
         double max = 0;
         for (double d : datos) {
             max = Math.max(max, d);
         }
         
-        // Dibujar línea
         g2d.setColor(colores[0]);
         g2d.setStroke(new BasicStroke(3.0f));
         
@@ -37,14 +34,12 @@ public class GraficoLineal extends GraficoBase {
             
             g2d.drawLine(prevX, prevY, x, y);
             
-            // Dibujar punto
             g2d.fillOval(x - 3, y - 3, 6, 6);
             
             prevX = x;
             prevY = y;
         }
         
-        // Dibujar etiquetas
         g2d.setColor(Color.BLACK);
         g2d.setFont(new Font("Arial", Font.PLAIN, 12));
         for (int i = 0; i < datos.length; i++) {

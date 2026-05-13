@@ -1,5 +1,3 @@
-
-
 import java.time.LocalDate;
 
 public class Prestamo {
@@ -18,7 +16,7 @@ public class Prestamo {
         this.usuario = usuario;
         this.libro = libro;
         this.fechaPrestamo = LocalDate.now();
-        this.fechaDevolucionEsperada = fechaPrestamo.plusDays(14); // 14 días de préstamo por defecto
+        this.fechaDevolucionEsperada = fechaPrestamo.plusDays(14);
         this.fechaDevolucionReal = null;
         this.estado = ACTIVO;
     }
@@ -64,12 +62,11 @@ public class Prestamo {
 public boolean procesarDevolucion() {
     if (estado == ACTIVO) {
         fechaDevolucionReal = LocalDate.now();
-        libro.devolverLibro();  // Primero marcamos el libro como disponible
-        if (usuario.devolverLibro(libro)) {  // Pasamos el libro como parámetro
+        libro.devolverLibro();
+        if (usuario.devolverLibro(libro)) {
             estado = DEVUELTO;
             return true;
         }
-        // Si la devolución falla, revertimos el estado del libro
         libro.prestarLibro();
     }
     return false;

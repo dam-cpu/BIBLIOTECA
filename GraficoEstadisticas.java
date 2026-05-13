@@ -17,16 +17,13 @@ public class GraficoEstadisticas extends Canvas {
         int width = getWidth();
         int height = getHeight();
         
-        // Fondo
         g2d.setColor(Color.WHITE);
         g2d.fillRect(0, 0, width, height);
         
-        // Título
         g2d.setColor(Color.BLACK);
         g2d.setFont(new Font("Arial", Font.BOLD, 16));
         g2d.drawString("Estadísticas de Préstamos Mensuales", 50, 30);
         
-        // Dibujar gráfico de barras
         int numBars = valores.length;
         int barWidth = (width - 100) / numBars;
         int maxValue = 0;
@@ -39,20 +36,16 @@ public class GraficoEstadisticas extends Canvas {
             int x = 50 + i * barWidth;
             int y = height - 50 - barHeight;
             
-            // Barra
             g2d.setColor(Color.BLUE);
             g2d.fillRect(x, y, barWidth - 10, barHeight);
             
-            // Borde
             g2d.setColor(Color.BLACK);
             g2d.drawRect(x, y, barWidth - 10, barHeight);
             
-            // Etiqueta
             g2d.setColor(Color.BLACK);
             g2d.setFont(new Font("Arial", Font.PLAIN, 12));
             g2d.drawString(etiquetas[i], x, height - 30);
             
-            // Valor
             g2d.drawString(String.valueOf(valores[i]), x, y - 5);
         }
     }

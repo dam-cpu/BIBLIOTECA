@@ -28,23 +28,19 @@ public class DialogoNuevoLibro extends JDialog {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         
-        // Crear campos de texto
         txtISBN = new JTextField(20);
         txtTitulo = new JTextField(20);
         txtAutor = new JTextField(20);
         txtEditorial = new JTextField(20);
         
-        // Crear spinner de páginas
         spnPaginas = new JSpinner(new SpinnerNumberModel(1, 1, 9999, 1));
         
-        // Agregar componentes con sus etiquetas
         agregarComponente("Título:", txtTitulo, gbc, 0);
         agregarComponente("Autor:", txtAutor, gbc, 1);
         agregarComponente("ISBN:", txtISBN, gbc, 2);
         agregarComponente("Editorial:", txtEditorial, gbc, 3);
         agregarComponente("Páginas:", spnPaginas, gbc, 4);
         
-        // Panel de botones
         pnlBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         btnGuardar = new JButton("Guardar");
         btnCancelar = new JButton("Cancelar");
@@ -55,7 +51,6 @@ public class DialogoNuevoLibro extends JDialog {
         pnlBotones.add(btnGuardar);
         pnlBotones.add(btnCancelar);
         
-        // Agregar panel de botones al diálogo
         gbc.gridx = 0;
         gbc.gridy = 5;
         gbc.gridwidth = 2;
@@ -64,14 +59,12 @@ public class DialogoNuevoLibro extends JDialog {
     }
     
     private void agregarComponente(String etiqueta, JComponent componente, GridBagConstraints gbc, int y) {
-        // Etiqueta
         gbc.gridx = 0;
         gbc.gridy = y;
         gbc.gridwidth = 1;
         gbc.anchor = GridBagConstraints.EAST;
         add(new JLabel(etiqueta), gbc);
         
-        // Componente
         gbc.gridx = 1;
         gbc.anchor = GridBagConstraints.WEST;
         add(componente, gbc);
@@ -85,8 +78,7 @@ public class DialogoNuevoLibro extends JDialog {
             return false;
         }
         
-        // Validar formato básico ISBN
-        String isbn = txtISBN.getText().trim().replace("-", ""); // Eliminar guiones
+        String isbn = txtISBN.getText().trim().replace("-", "");
         if (isbn.length() != 10 && isbn.length() != 13) {
             JOptionPane.showMessageDialog(this, "El ISBN debe tener 10 o 13 dígitos", 
                     "Error de validación", JOptionPane.ERROR_MESSAGE);
@@ -115,7 +107,6 @@ public class DialogoNuevoLibro extends JDialog {
         return nuevoLibro;
     }
     
-    // Clase interna para el botón Guardar
     private class BotonGuardar implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -123,7 +114,6 @@ public class DialogoNuevoLibro extends JDialog {
         }
     }
     
-    // Clase interna para el botón Cancelar
     private class BotonCancelar implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {

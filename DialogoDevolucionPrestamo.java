@@ -5,9 +5,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
-/**
- * Diálogo para devolver un préstamo de libro con cálculo de multa por retraso
- */
 public class DialogoDevolucionPrestamo extends JDialog {
     private JComboBox<String> cbxLibros;
     private JComboBox<String> cbxUsuarios;
@@ -15,7 +12,7 @@ public class DialogoDevolucionPrestamo extends JDialog {
     private JSpinner spnDiasRetraso;
     private JLabel lblMulta;
     private boolean guardadoExitoso;
-    private double multaPorDia = 10.0; // 10 por día de retraso
+    private double multaPorDia = 10.0;
 
     public DialogoDevolucionPrestamo(JFrame parent, Biblioteca biblioteca) {
         super(parent, "Devolución de Préstamo", true);
@@ -35,7 +32,6 @@ public class DialogoDevolucionPrestamo extends JDialog {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 1.0;
 
-        // Seleccionar libro prestado
         gbc.gridx = 0;
         gbc.gridy = 0;
         add(new JLabel("Libro:"), gbc);
@@ -49,7 +45,6 @@ public class DialogoDevolucionPrestamo extends JDialog {
         cbxLibros = new JComboBox<>(librosArray);
         add(cbxLibros, gbc);
 
-        // Seleccionar usuario
         gbc.gridx = 0;
         gbc.gridy = 1;
         add(new JLabel("Usuario:"), gbc);
@@ -65,7 +60,6 @@ public class DialogoDevolucionPrestamo extends JDialog {
         cbxUsuarios = new JComboBox<>(usuariosArray);
         add(cbxUsuarios, gbc);
 
-        // Seleccionar empleado
         gbc.gridx = 0;
         gbc.gridy = 2;
         add(new JLabel("Empleado:"), gbc);
@@ -81,7 +75,6 @@ public class DialogoDevolucionPrestamo extends JDialog {
         cbxEmpleados = new JComboBox<>(empleadosArray);
         add(cbxEmpleados, gbc);
 
-        // Días de retraso
         gbc.gridx = 0;
         gbc.gridy = 3;
         add(new JLabel("Días de retraso:"), gbc);
@@ -91,7 +84,6 @@ public class DialogoDevolucionPrestamo extends JDialog {
         spnDiasRetraso.addChangeListener(e -> actualizarMulta());
         add(spnDiasRetraso, gbc);
 
-        // Información de multa
         gbc.gridx = 0;
         gbc.gridy = 4;
         add(new JLabel("Multa a pagar:"), gbc);
@@ -102,7 +94,6 @@ public class DialogoDevolucionPrestamo extends JDialog {
         lblMulta.setForeground(Color.RED);
         add(lblMulta, gbc);
 
-        // Panel de botones
         JPanel pnlBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton btnGuardar = new JButton("Guardar");
         JButton btnCancelar = new JButton("Cancelar");
@@ -146,17 +137,14 @@ public class DialogoDevolucionPrestamo extends JDialog {
         }
 
         try {
-            // Extraer ISBN del item seleccionado
             String libroSeleccionado = (String) cbxLibros.getSelectedItem();
             String libroISBN = libroSeleccionado.substring(libroSeleccionado.lastIndexOf("(") + 1,
                     libroSeleccionado.lastIndexOf(")"));
 
-            // Obtener días de retraso
             int diasRetraso = (Integer) spnDiasRetraso.getValue();
             double multa = diasRetraso * multaPorDia;
 
-            // Realizar devolución
-            if (biblioteca.devolverLibro(libroISBN, "E001")) { // Usando ID de empleado estático por ahora
+            if (biblioteca.devolverLibro(libroISBN, "E001")) {
                 guardadoExitoso = true;
                 
                 String mensaje = "Devolución realizada exitosamente\n\n";

@@ -3,9 +3,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 
-/**
- * Diálogo para buscar usuarios
- */
 public class DialogoBuscarUsuario extends JDialog {
     private JTextField txtBusqueda;
     private JTable tblResultados;
@@ -25,7 +22,6 @@ public class DialogoBuscarUsuario extends JDialog {
     private void inicializarComponentes(Biblioteca biblioteca) {
         setLayout(new BorderLayout(10, 10));
 
-        // Panel de búsqueda
         JPanel pnlBusqueda = new JPanel(new FlowLayout(FlowLayout.LEFT));
         pnlBusqueda.add(new JLabel("Buscar:"));
         
@@ -36,28 +32,25 @@ public class DialogoBuscarUsuario extends JDialog {
         btnBuscar.addActionListener(e -> realizarBusqueda(biblioteca));
         pnlBusqueda.add(btnBuscar);
 
-        // Tabla de resultados
         String[] columnas = {"ID", "Nombre", "Tipo"};
         Object[][] datos = {};
         modelo = new DefaultTableModel(datos, columnas);
         tblResultados = new JTable(modelo);
-        tblResultados.setEnabled(false); // Tabla de solo lectura
+        tblResultados.setEnabled(false);
         JScrollPane scrollTabla = new JScrollPane(tblResultados);
 
-        // Panel de botones
         JPanel pnlBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton btnCerrar = new JButton("Cerrar");
         btnCerrar.addActionListener(e -> dispose());
         pnlBotones.add(btnCerrar);
 
-        // Agregar componentes
         add(pnlBusqueda, BorderLayout.NORTH);
         add(scrollTabla, BorderLayout.CENTER);
         add(pnlBotones, BorderLayout.SOUTH);
     }
 
     private void realizarBusqueda(Biblioteca biblioteca) {
-        modelo.setRowCount(0); // Limpiar tabla
+        modelo.setRowCount(0);
 
         String termino = txtBusqueda.getText().trim().toLowerCase();
         
@@ -68,7 +61,6 @@ public class DialogoBuscarUsuario extends JDialog {
             return;
         }
 
-        // Buscar usuarios
         for (Usuario usuario : biblioteca.getUsuarios()) {
             if (usuario.getNombre().toLowerCase().contains(termino) ||
                 usuario.getId().toLowerCase().contains(termino)) {

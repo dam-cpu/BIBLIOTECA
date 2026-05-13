@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 public class BibliotecaGUI extends JFrame {
     
-    // Componentes de la interfaz
     private JMenuBar menuBar;
     private JMenu mnuArchivo, mnuCatalogo, mnuPrestamo, mnuUsuarios, mnuAyuda;
     
@@ -19,26 +18,20 @@ public class BibliotecaGUI extends JFrame {
     private JScrollPane scrollTabla;
     private JLabel lblEstado;
     
-    // Modelo de datos
     private Biblioteca biblioteca;
     
     public BibliotecaGUI() {
-        // Crear instancia de la biblioteca
         biblioteca = new Biblioteca("Biblioteca Central", "Puebla, Puebla");
         
-        // Configurar la ventana
         setTitle("Sistema de Biblioteca - " + biblioteca.getNombre());
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-        // Llenar la base con algunos libros de prueba
+
         llenaBase();
-        
-        // Crear componentes
+
         crearMenu();
         crearPanelPrincipal();
         
-        // Hacer visible
         setVisible(true);
     }
     
@@ -50,17 +43,14 @@ public class BibliotecaGUI extends JFrame {
     }
     
     private void crearMenu() {
-        // Crear la barra de menús
         menuBar = new JMenuBar();
         
-        // Crear menús principales
         mnuArchivo = new JMenu("Archivo");
         mnuCatalogo = new JMenu("Catálogo");
         mnuPrestamo = new JMenu("Préstamo");
         mnuUsuarios = new JMenu("Usuarios");
         mnuAyuda = new JMenu("Ayuda");
         
-        // Menú Archivo
         JMenuItem mnuNuevaBiblioteca = new JMenuItem("Nueva Biblioteca");
         JMenuItem mnuAbrirBD = new JMenuItem("Abrir Base de Datos");
         JMenuItem mnuGuardarBD = new JMenuItem("Guardar Base de Datos");
@@ -73,7 +63,6 @@ public class BibliotecaGUI extends JFrame {
         mnuArchivo.addSeparator();
         mnuArchivo.add(mnuSalir);
         
-        // Menú Catálogo
         JMenuItem mnuNuevoLibro = new JMenuItem("Agregar Libro");
         mnuNuevoLibro.addActionListener(new MostrarDialogoNuevo());
         JMenuItem mnuBuscarLibro = new JMenuItem("Buscar Libro");
@@ -89,7 +78,6 @@ public class BibliotecaGUI extends JFrame {
         mnuCatalogo.addSeparator();
         mnuCatalogo.add(mnuListarTodos);
         
-        // Menú Préstamo
         JMenuItem mnuNuevoPrestamo = new JMenuItem("Nuevo Préstamo");
         mnuNuevoPrestamo.addActionListener(e -> {
             DialogoNuevoPrestamo dialog = new DialogoNuevoPrestamo(this, biblioteca);
@@ -119,7 +107,6 @@ public class BibliotecaGUI extends JFrame {
         mnuPrestamo.addSeparator();
         mnuPrestamo.add(mnuMostrarPrestamos);
         
-        // Menú Usuarios
         JMenuItem mnuRegistrarUsuario = new JMenuItem("Registrar Usuario");
         mnuRegistrarUsuario.addActionListener(e -> {
             DialogoRegistrarUsuario dialog = new DialogoRegistrarUsuario(this);
@@ -141,7 +128,6 @@ public class BibliotecaGUI extends JFrame {
         mnuUsuarios.addSeparator();
         mnuUsuarios.add(mnuListarUsuarios);
         
-        // Menú Ayuda
         JMenuItem mnuEstadisticas = new JMenuItem("Estadísticas");
         mnuEstadisticas.addActionListener(e -> new DialogoEstadisticas(this, biblioteca));
         
@@ -152,14 +138,12 @@ public class BibliotecaGUI extends JFrame {
         mnuAyuda.addSeparator();
         mnuAyuda.add(mnuAcercaDe);
         
-        // Agregar menús a la barra
         menuBar.add(mnuArchivo);
         menuBar.add(mnuCatalogo);
         menuBar.add(mnuPrestamo);
         menuBar.add(mnuUsuarios);
         menuBar.add(mnuAyuda);
         
-        // Establecer la barra de menús en el frame
         setJMenuBar(menuBar);
     }
     
@@ -198,10 +182,8 @@ public class BibliotecaGUI extends JFrame {
     }
     
     private void crearPanelPrincipal() {
-        // Panel principal con BorderLayout
         pnlPrincipal = new JPanel(new BorderLayout());
         
-        // Panel de búsqueda
         pnlBusqueda = new JPanel(new FlowLayout());
         txtBusqueda = new JTextField(30);
         btnBuscar = new JButton("Buscar");
@@ -209,14 +191,12 @@ public class BibliotecaGUI extends JFrame {
         pnlBusqueda.add(txtBusqueda);
         pnlBusqueda.add(btnBuscar);
         
-        // Tabla de libros
         String[] columnas = {"Título", "Autor", "ISBN", "Páginas", "Estado"};
         Object[][] datos = {};
         DefaultTableModel modelo = new DefaultTableModel(datos, columnas);
         tablaLibros = new JTable(modelo);
         scrollTabla = new JScrollPane(tablaLibros);
         
-        // Panel de acciones
         pnlAcciones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         btnNuevoLibro = new JButton("Nuevo Libro");
         btnNuevoLibro.addActionListener(new MostrarDialogoNuevo());
@@ -232,11 +212,9 @@ public class BibliotecaGUI extends JFrame {
         pnlAcciones.add(btnEliminarLibro);
         pnlAcciones.add(btnUbicarLibro);
         
-        // Barra de estado
         lblEstado = new JLabel(" Listo");
         lblEstado.setBorder(BorderFactory.createLoweredBevelBorder());
         
-        // Integración final
         pnlPrincipal.add(pnlBusqueda, BorderLayout.NORTH);
         pnlPrincipal.add(scrollTabla, BorderLayout.CENTER);
         pnlPrincipal.add(pnlAcciones, BorderLayout.SOUTH);
@@ -244,7 +222,6 @@ public class BibliotecaGUI extends JFrame {
         this.add(pnlPrincipal, BorderLayout.CENTER);
         this.add(lblEstado, BorderLayout.SOUTH);
         
-        // Actualizar tabla con los libros iniciales
         actualizarTablaLibros(biblioteca.getLibros());
     }
 
@@ -290,7 +267,6 @@ public class BibliotecaGUI extends JFrame {
         if (!termino.isEmpty()) {
             List<Libro> resultados = new ArrayList<>();
             
-            // Buscar en Título, Autor e ISBN
             for (Libro libro : biblioteca.getLibros()) {
                 if (libro.getTitulo().toLowerCase().contains(termino.toLowerCase()) ||
                     libro.getAutor().toLowerCase().contains(termino.toLowerCase()) ||
@@ -312,7 +288,6 @@ public class BibliotecaGUI extends JFrame {
             String autor = (String) tablaLibros.getValueAt(filaSeleccionada, 1);
             String isbn = (String) tablaLibros.getValueAt(filaSeleccionada, 2);
             
-            // Crear un nuevo objeto Libro con los datos
             Libro libroSeleccionado = new Libro();
             libroSeleccionado.setTitulo(titulo);
             libroSeleccionado.setAutor(autor);
@@ -327,7 +302,6 @@ public class BibliotecaGUI extends JFrame {
         }
     }
     
-    // Clase interna para manejar evento de búsqueda
     private class RealizaBusqueda implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -335,7 +309,6 @@ public class BibliotecaGUI extends JFrame {
         }
     }
     
-    // Clase interna para mostrar diálogo de nuevo libro
     private class MostrarDialogoNuevo implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -343,7 +316,6 @@ public class BibliotecaGUI extends JFrame {
         }
     }
     
-    // Clase interna para mostrar ubicación del libro
     private class MostrarUbicacion implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -360,7 +332,6 @@ public class BibliotecaGUI extends JFrame {
             String isbn = (String) tablaLibros.getValueAt(filaSeleccionada, 2);
             int paginas = (Integer) tablaLibros.getValueAt(filaSeleccionada, 3);
             
-            // Crear un objeto Libro con los datos
             Libro libroSeleccionado = new Libro(titulo, autor, isbn, paginas);
             
             DialogoEditarLibro dialog = new DialogoEditarLibro(this, libroSeleccionado);
@@ -368,7 +339,6 @@ public class BibliotecaGUI extends JFrame {
             if (dialog.isGuardadoExitoso()) {
                 Libro libroActualizado = dialog.getLibroEditado();
                 
-                // Buscar y actualizar el libro en la biblioteca
                 for (Libro libro : biblioteca.getLibros()) {
                     if (libro.getIsbn().equals(isbn)) {
                         libro.setTitulo(libroActualizado.getTitulo());
@@ -400,7 +370,6 @@ public class BibliotecaGUI extends JFrame {
                     "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
             
             if (respuesta == JOptionPane.YES_OPTION) {
-                // Buscar y eliminar el libro
                 Libro libroAEliminar = null;
                 for (Libro libro : biblioteca.getLibros()) {
                     if (libro.getIsbn().equals(isbn)) {
@@ -422,7 +391,6 @@ public class BibliotecaGUI extends JFrame {
         }
     }
     
-    // Clase interna para editar libro
     private class EditarLibro implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -430,7 +398,6 @@ public class BibliotecaGUI extends JFrame {
         }
     }
     
-    // Clase interna para eliminar libro
     private class EliminarLibro implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -441,7 +408,6 @@ public class BibliotecaGUI extends JFrame {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             BibliotecaGUI gui = new BibliotecaGUI();
-            // Inicializar el logger al inicio de la aplicación
             try {
                 BibliotecaLogger.inicializar();
                 BibliotecaLogger.logInfo("Sistema de Biblioteca iniciado correctamente");

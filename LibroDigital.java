@@ -1,7 +1,7 @@
 
 
 public class LibroDigital extends Libro {
-    private String formato; // PDF, EPUB, MOBI, etc.
+    private String formato;
     private double tamanoMB;
     private String urlDescarga;
     private int descargasPermitidas;
@@ -12,7 +12,7 @@ public class LibroDigital extends Libro {
         this.formato = formato;
         this.tamanoMB = tamanoMB;
         this.urlDescarga = urlDescarga;
-        this.descargasPermitidas = 3; // Valor por defecto
+        this.descargasPermitidas = 3;
         this.descargasActuales = 0;
     }
     public LibroDigital(Libro libro, String formato, double tamanoMB, String urlDescarga) {
@@ -20,7 +20,7 @@ public class LibroDigital extends Libro {
 		      this.formato = formato;
 		      this.tamanoMB = tamanoMB;
 		      this.urlDescarga = urlDescarga;
-		      this.descargasPermitidas = 3; // Valor por defecto
+		      this.descargasPermitidas = 3;
 		      this.descargasActuales = 0;
 	}
     public String getFormato() { 

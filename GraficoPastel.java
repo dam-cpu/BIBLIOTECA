@@ -13,18 +13,15 @@ public class GraficoPastel extends GraficoBase {
         int width = g2d.getClipBounds().width;
         int height = g2d.getClipBounds().height;
         
-        // Dibujar título
         g2d.setColor(Color.BLACK);
         g2d.setFont(new Font("Arial", Font.BOLD, 16));
         g2d.drawString(titulo, 50, 30);
         
-        // Calcular total
         double total = 0;
         for (double d : datos) {
             total += d;
         }
         
-        // Dibujar pastel
         int centerX = width / 2;
         int centerY = height / 2;
         int radius = Math.min(width, height) / 4;
@@ -36,8 +33,7 @@ public class GraficoPastel extends GraficoBase {
             g2d.setColor(colores[i % colores.length]);
             g2d.fill(new Arc2D.Double(centerX - radius, centerY - radius,
                                     radius * 2, radius * 2, startAngle, angle, Arc2D.PIE));
-            
-            // Dibujar borde
+
             g2d.setColor(Color.BLACK);
             g2d.setStroke(new BasicStroke(2.0f));
             g2d.draw(new Arc2D.Double(centerX - radius, centerY - radius,
@@ -46,7 +42,6 @@ public class GraficoPastel extends GraficoBase {
             startAngle += angle;
         }
         
-        // Dibujar etiquetas
         g2d.setColor(Color.BLACK);
         g2d.setFont(new Font("Arial", Font.PLAIN, 12));
         startAngle = 0;
@@ -61,7 +56,6 @@ public class GraficoPastel extends GraficoBase {
                 g2d.drawString(etiquetas[i], labelX, labelY);
             }
             
-            // Porcentaje
             int percent = (int)((datos[i] / total) * 100);
             g2d.drawString(percent + "%", labelX, labelY + 15);
             

@@ -8,13 +8,11 @@ public class TestMejorasGraficos extends Frame {
     public TestMejorasGraficos(String titulo) {
         super(titulo);
 
-        // Configurar gráfico lineal
         graficoLineal = new GraficoLineal();
         graficoLineal.setTitulo("Tendencia de Préstamos");
         graficoLineal.actualizarDatos(new double[]{10, 15, 8, 22, 18, 25, 30});
         graficoLineal.setEtiquetas(new String[]{"Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul"});
 
-        // Configurar gráfico pastel
         graficoPastel = new GraficoPastel();
         graficoPastel.setTitulo("Distribución por Categoría");
         graficoPastel.actualizarDatos(new double[]{30, 25, 20, 15, 10});
@@ -34,7 +32,6 @@ public class TestMejorasGraficos extends Frame {
         return super.handleEvent(e);
     }
 
-    // Clase auxiliar para mostrar gráficos en Canvas
     private class CanvasGrafico extends Canvas {
         private IGrafico grafico;
 

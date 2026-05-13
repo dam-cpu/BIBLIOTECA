@@ -4,9 +4,6 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Diálogo para búsqueda avanzada de libros con criterios múltiples (no excluyentes)
- */
 public class DialogoBusquedaAvanzada extends JDialog {
     private JTextField txtCampo;
     private JCheckBox chkTitulo;
@@ -30,13 +27,11 @@ public class DialogoBusquedaAvanzada extends JDialog {
     private void inicializarComponentes(List<Libro> librosDisponibles) {
         setLayout(new BorderLayout(10, 10));
         
-        // Panel de búsqueda
         JPanel pnlBusqueda = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         
-        // Etiqueta y campo de texto
         gbc.gridx = 0;
         gbc.gridy = 0;
         pnlBusqueda.add(new JLabel("Término de búsqueda:"), gbc);
@@ -47,7 +42,6 @@ public class DialogoBusquedaAvanzada extends JDialog {
         txtCampo = new JTextField(20);
         pnlBusqueda.add(txtCampo, gbc);
         
-        // Checkboxes para criterios
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.gridwidth = 1;
@@ -65,7 +59,6 @@ public class DialogoBusquedaAvanzada extends JDialog {
         chkISBN = new JCheckBox("ISBN", true);
         pnlBusqueda.add(chkISBN, gbc);
         
-        // Panel de botones
         JPanel pnlBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton btnBuscar = new JButton("Buscar");
         JButton btnCancelar = new JButton("Cancelar");
@@ -87,7 +80,6 @@ public class DialogoBusquedaAvanzada extends JDialog {
         pnlBotones.add(btnBuscar);
         pnlBotones.add(btnCancelar);
         
-        // Agregar componentes a la ventana
         add(pnlBusqueda, BorderLayout.CENTER);
         add(pnlBotones, BorderLayout.SOUTH);
     }
@@ -95,7 +87,6 @@ public class DialogoBusquedaAvanzada extends JDialog {
     private void realizarBusqueda(List<Libro> librosDisponibles) {
         String termino = txtCampo.getText().trim().toLowerCase();
         
-        // Validar que al menos un criterio esté seleccionado
         if (!chkTitulo.isSelected() && !chkAutor.isSelected() && !chkISBN.isSelected()) {
             JOptionPane.showMessageDialog(this,
                     "Por favor, seleccione al menos un criterio de búsqueda",
@@ -103,7 +94,6 @@ public class DialogoBusquedaAvanzada extends JDialog {
             return;
         }
         
-        // Validar que el campo no esté vacío
         if (termino.isEmpty()) {
             JOptionPane.showMessageDialog(this,
                     "Por favor, ingrese un término de búsqueda",
@@ -111,7 +101,6 @@ public class DialogoBusquedaAvanzada extends JDialog {
             return;
         }
         
-        // Realizar búsqueda según los criterios seleccionados
         resultados.clear();
         for (Libro libro : librosDisponibles) {
             boolean encontrado = false;
@@ -138,7 +127,6 @@ public class DialogoBusquedaAvanzada extends JDialog {
         
         busquedaRealizada = true;
         
-        // Mostrar resultados
         if (resultados.isEmpty()) {
             JOptionPane.showMessageDialog(this,
                     "No se encontraron libros que coincidan con los criterios de búsqueda",

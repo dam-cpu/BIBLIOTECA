@@ -25,33 +25,27 @@ public class DiagramaBiblioteca extends Canvas {
         int alto = getHeight();
         int margen = 20;
         
-        // Dibujar paredes exteriores
         g2d.setColor(Color.BLACK);
         g2d.drawRect(margen, margen, ancho - 2 * margen, alto - 2 * margen);
         
-        // Dibujar estanterías
         g2d.setColor(Color.DARK_GRAY);
         int anchoEstanteria = 40;
-        int altoEstanteria = alto - 2 * margen - 100; // Espacio para mesas
+        int altoEstanteria = alto - 2 * margen - 100;
         
         for(int i = 0; i < 4; i++) {
             int x = margen + 80 + i * 120;
             g2d.fillRect(x, margen + 50, anchoEstanteria, altoEstanteria);
         }
         
-        // Dibujar cubículos de empleados
         g2d.setColor(Color.LIGHT_GRAY);
         int anchoCubiculo = 80;
         int altoCubiculo = 60;
         
-        // Cubículo izquierdo
         g2d.fillRect(margen + 20, alto - margen - altoCubiculo - 20, anchoCubiculo, altoCubiculo);
         
-        // Cubículo derecho
         g2d.fillRect(ancho - margen - anchoCubiculo - 20, alto - margen - altoCubiculo - 20, anchoCubiculo, altoCubiculo);
         
-        // Dibujar mesas de estudio
-        g2d.setColor(new Color(139, 69, 19)); // Color marrón
+        g2d.setColor(new Color(139, 69, 19));
         int anchoMesa = 60;
         int altoMesa = 30;
         
@@ -61,7 +55,6 @@ public class DiagramaBiblioteca extends Canvas {
             g2d.fillRect(x, y, anchoMesa, altoMesa);
         }
         
-        // Dibujar sillas
         g2d.setColor(Color.BLUE);
         int anchoSilla = 20;
         int altoSilla = 20;
@@ -70,14 +63,11 @@ public class DiagramaBiblioteca extends Canvas {
             int xMesa = margen + 60 + i * 100;
             int yMesa = alto - margen - altoMesa - 100;
             
-            // Silla arriba de la mesa
             g2d.fillRect(xMesa + anchoMesa/2 - anchoSilla/2, yMesa - altoSilla - 5, anchoSilla, altoSilla);
             
-            // Silla abajo de la mesa
             g2d.fillRect(xMesa + anchoMesa/2 - anchoSilla/2, yMesa + altoMesa + 5, anchoSilla, altoSilla);
         }
         
-        // Dibujar puerta
         g2d.setColor(Color.WHITE);
         int anchoPuerta = 50;
         int altoPuerta = 80;
@@ -85,11 +75,9 @@ public class DiagramaBiblioteca extends Canvas {
         int yPuerta = margen + (alto - 2 * margen - altoPuerta) / 2;
         g2d.fillRect(xPuerta, yPuerta, anchoPuerta, altoPuerta);
         
-        // Marco de la puerta
         g2d.setColor(Color.BLACK);
         g2d.drawRect(xPuerta, yPuerta, anchoPuerta, altoPuerta);
         
-        // Dibujar ventana
         g2d.setColor(Color.CYAN);
         int anchoVentana = 80;
         int altoVentana = 40;
@@ -97,11 +85,9 @@ public class DiagramaBiblioteca extends Canvas {
         int yVentana = margen + 10;
         g2d.fillRect(xVentana, yVentana, anchoVentana, altoVentana);
         
-        // Marco de la ventana
         g2d.setColor(Color.BLACK);
         g2d.drawRect(xVentana, yVentana, anchoVentana, altoVentana);
         
-        // Dibujar etiquetas
         g2d.setColor(Color.BLACK);
         g2d.setFont(new Font("Arial", Font.BOLD, 14));
         g2d.drawString("Biblioteca", ancho/2 - 30, margen - 5);
@@ -112,12 +98,10 @@ public class DiagramaBiblioteca extends Canvas {
         g2d.drawString("Puerta", xPuerta + 10, yPuerta + altoPuerta + 15);
         g2d.drawString("Ventana", xVentana + 10, yVentana + altoVentana + 15);
         
-        // Leyenda
         g2d.setFont(new Font("Arial", Font.BOLD, 12));
         g2d.drawString("Leyenda:", margen + 20, alto - margen + 20);
         g2d.setFont(new Font("Arial", Font.PLAIN, 10));
         
-        // Elementos de la leyenda
         g2d.setColor(Color.DARK_GRAY);
         g2d.fillRect(margen + 20, alto - margen + 30, 15, 10);
         g2d.setColor(Color.BLACK);
@@ -138,14 +122,12 @@ public class DiagramaBiblioteca extends Canvas {
         g2d.setColor(Color.BLACK);
         g2d.drawString("Sillas", margen + 40, alto - margen + 85);
         
-        // Si hay ubicación definida, marcarla
         if (libroUbicacion >= 0) {
             marcarUbicacion(g2d, libroUbicacion);
         }
     }
     
     private void marcarUbicacion(Graphics2D g2d, int numLibrero) {
-        // Determinar en qué estantería se encuentra basado en el rango
         int x = 0, y = 0;
         if (numLibrero >= 100 && numLibrero <= 200) { x = 140; y = 130; }
         else if (numLibrero >= 201 && numLibrero <= 300) { x = 140; y = 230; }
@@ -156,7 +138,6 @@ public class DiagramaBiblioteca extends Canvas {
         else if (numLibrero >= 701 && numLibrero <= 800) { x = 660; y = 330; }
         else if (numLibrero >= 801 && numLibrero <= 900) { x = 660; y = 430; }
         
-        // Dibujar X en rojo
         g2d.setColor(Color.RED);
         g2d.setStroke(new BasicStroke(3.0f));
         int size = 20;

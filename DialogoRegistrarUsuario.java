@@ -2,9 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-/**
- * Diálogo para registrar un nuevo usuario
- */
 public class DialogoRegistrarUsuario extends JDialog {
     private JTextField txtID;
     private JTextField txtNombre;
@@ -29,7 +26,6 @@ public class DialogoRegistrarUsuario extends JDialog {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // ID
         gbc.gridx = 0;
         gbc.gridy = 0;
         add(new JLabel("ID del Usuario:"), gbc);
@@ -39,7 +35,6 @@ public class DialogoRegistrarUsuario extends JDialog {
         txtID = new JTextField(15);
         add(txtID, gbc);
 
-        // Nombre
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.weightx = 0;
@@ -50,7 +45,6 @@ public class DialogoRegistrarUsuario extends JDialog {
         txtNombre = new JTextField(15);
         add(txtNombre, gbc);
 
-        // Tipo (Estudiante, Profesor, etc.)
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.weightx = 0;
@@ -61,7 +55,6 @@ public class DialogoRegistrarUsuario extends JDialog {
         txtTipo = new JTextField(15);
         add(txtTipo, gbc);
 
-        // Panel de botones
         JPanel pnlBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton btnGuardar = new JButton("Guardar");
         JButton btnCancelar = new JButton("Cancelar");
@@ -83,7 +76,6 @@ public class DialogoRegistrarUsuario extends JDialog {
         String nombre = txtNombre.getText().trim();
         String tipo = txtTipo.getText().trim();
 
-        // Validar campos
         if (id.isEmpty() || nombre.isEmpty() || tipo.isEmpty()) {
             JOptionPane.showMessageDialog(this,
                     "Por favor, complete todos los campos",
@@ -91,7 +83,6 @@ public class DialogoRegistrarUsuario extends JDialog {
             return;
         }
 
-        // Crear nuevo usuario
         usuarioCreado = new Usuario(id, nombre, tipo);
         guardadoExitoso = true;
         

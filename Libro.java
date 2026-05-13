@@ -1,5 +1,3 @@
-
-
 public class Libro {
    private String titulo;
    private String autor;
@@ -42,7 +40,7 @@ public class Libro {
         this.autor = otroLibro.autor;
         this.isbn = otroLibro.isbn;
         this.numPaginas = otroLibro.numPaginas;
-        this.prestado = false;  // El nuevo libro siempre inicia como no prestado
+        this.prestado = false;
     }   
 
     public String getTitulo() {

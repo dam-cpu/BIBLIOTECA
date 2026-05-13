@@ -28,8 +28,6 @@ public abstract class GraficoBase implements IGrafico {
     }
     
     protected void calcularEscala() {
-        // Método para calcular la escala del gráfico
-        // Implementación común para todas las subclases
     }
     
     public abstract void dibujar(Graphics2D g2d);
